@@ -1,10 +1,12 @@
+import os
 import sqlite3
 from pathlib import Path
 
 from flask import Flask, g, redirect, render_template, request, url_for
 
 BASE_DIR = Path(__file__).resolve().parent
-DB_PATH = BASE_DIR / "todo.db"
+# Vercel의 서버리스 함수는 코드 디렉터리가 읽기 전용이고 /tmp만 쓰기 가능하다.
+DB_PATH = Path("/tmp/todo.db") if os.environ.get("VERCEL") else BASE_DIR / "todo.db"
 
 app = Flask(__name__)
 
