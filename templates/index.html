@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>할일 관리</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main class="wrap">
+    <h1>📝 할일 관리</h1>
+    <p class="summary">남은 할일: <strong>{{ remaining }}</strong>개 / 전체 {{ todos|length }}개</p>
+
+    <form action="{{ url_for('add') }}" method="post" class="add-form">
+      <input type="text" name="title" placeholder="할 일을 입력하세요" autofocus required>
+      <button type="submit">추가</button>
+    </form>
+
+    <ul class="todo-list">
+      {% for todo in todos %}
+      <li class="todo-item {{ 'done' if todo['done'] else '' }}">
+        <form action="{{ url_for('toggle', todo_id=todo['id']) }}" method="post" class="toggle-form">
+          <button type="submit" class="check-btn" title="완료 토글">
+            {{ '✅' if todo['done'] else '⬜' }}
+          </button>
+        </form>
+
+        <span class="title-text">{{ todo['title'] }}</span>
+
+        <div class="actions">
+          <form action="{{ url_for('delete', todo_id=todo['id']) }}" method="post" onsubmit="return confirm('삭제할까요?');">
+            <button type="submit" class="delete-btn">삭제</button>
+          </form>
+        </div>
+      </li>
+      {% else %}
+      <li class="empty">할 일이 없습니다. 위에서 추가해보세요!</li>
+      {% endfor %}
+    </ul>
+  </main>
+</body>
+</html>
